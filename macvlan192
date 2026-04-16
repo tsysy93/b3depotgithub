@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+ 
+    stages {
+        stage('CheckOut-SCM') {
+            steps {
+                cleanWs()
+                git branch: 'main', credentialsId: 'tsysy93-github-token', url: 'https://github.com/tsysy93/b3depotgithub.git'
+            }
+        }
+        stage('Create-macvlan192'){
+            steps {
+                sh 'docker network create -d macvlan --subnet=192.168.75.0/24 --gateway=192.168.75.254 -o parent=ens32 macvlan192'
+                sh 'docker network ls'
+            }
+        }
+    }
+}
