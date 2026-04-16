@@ -3,6 +3,18 @@ pipeline {
 
     stages {
 
+        stage('Remove Docker') {
+            steps {
+                sh """
+                sudo systemctl stop docker || true
+                sudo apt-get remove -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || true
+                sudo apt-get purge -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || true
+                sudo rm -rf /var/lib/docker
+                sudo rm -rf /var/lib/containerd
+                """
+            }
+        }
+
         stage('Update system') {
             steps {
                 sh "sudo apt-get update -y"
